@@ -14,6 +14,8 @@ class MessageService:
             match_value=user.id,
             error_not_exist=False,
         )
+        if messages is None:
+            return []
         return [
             MessageResponse(
                 message=message.message,
