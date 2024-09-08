@@ -17,15 +17,14 @@ class UserResponse(BaseModel):
 
 
 class SubCategoryResponse(BaseModel):
-    id: UUID
-    name: str
+    id: UUID | None
+    name: str | None = None
     description: str | None = None
 
 
 class CategoryInfoResponse(BaseModel):
-    id: UUID
-    name: str
+    id: UUID | None
+    name: str | None = None
     description: str | None = None
-    created_at: datetime
     parent_id: UUID | None = None
     children: list[SubCategoryResponse] = []

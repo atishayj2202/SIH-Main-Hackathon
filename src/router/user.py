@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends
 from starlette import status
 from starlette.responses import Response
@@ -14,7 +16,8 @@ user_router = APIRouter(prefix=USER_PREFIX)
 
 CREATE_USER = "/create-user/"
 GET_USER = "/get-user/"
-GET_CATEGORY = "/get-category/{category_id}/"
+GET_BASE_CATEGORY = "/get-base-category/"
+GET_CATEGORY = "/{category_id}/get-category/"
 
 
 @user_router.post(CREATE_USER)
@@ -29,3 +32,15 @@ async def get_user(
     verified_user: VerifiedUser = Depends(verify_user),
 ):
     return UserService.get_user(verified_user.requesting_user)
+
+@user_router.get(GET_BASE_CATEGORY)
+async def get_base_category(db_client: DBClient = Depends(getDBClient)):
+    return UserService.get_category(db_client=db_client, category_id=None)
+
+
+@user_router.get(GET_CATEGORY)
+async def get_category(
+    category_id: UUID | None = None,
+    db_client: DBClient = Depends(getDBClient),
+):
+    return UserService.get_category(db_client=db_client, category_id=category_id)
