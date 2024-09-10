@@ -20,7 +20,12 @@ def gemini_response(input):
     f"input: {input}"]
 
     response = model.generate_content(prompt, stream = True)
+    result = ""
     for chunk in response:
+        result += chunk.text
         print(chunk.text)
-input = input("Give input: ")
-gemini_response(input)
+    return result
+
+
+if __name__ == "__main__":
+    gemini_response("Hello Everyone")
