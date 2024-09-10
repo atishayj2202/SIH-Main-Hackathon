@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends
 
 from src.auth.user_auth import VerifiedUser, verify_user
@@ -35,8 +37,10 @@ async def get_ai_reply(
         request=request, user=verified_user.requesting_user, db_client=db_client
     )
 
+
 @message_router.get(GET_CATEGORY_MESSAGES, response_model=list[MessageResponse])
 async def get_messages(
+    category_id: UUID | None = None,
     verified_user: VerifiedUser = Depends(verify_user),
     db_client: DBClient = Depends(getDBClient),
 ):
@@ -45,9 +49,10 @@ async def get_messages(
     )
 
 
-@message_router.post(GET_AI_REPLY, response_model=MessageResponse)
+@message_router.post(GET_CATEGORY_AI_REPLY, response_model=MessageResponse)
 async def get_ai_reply(
     request: MessageRequest,
+    category_id: UUID | None = None,
     verified_user: VerifiedUser = Depends(verify_user),
     db_client: DBClient = Depends(getDBClient),
 ):

@@ -10,4 +10,3 @@ CLOSE_GAME = "/{game_id}/close-game/"
 UPDATE_GAME = "/{game_id}/update-game/"
 CURRENT_QUESTION = "/{game_id}/current-question/"
 CHECK_ANSWER = "/{game_id}/check-answer/"
-

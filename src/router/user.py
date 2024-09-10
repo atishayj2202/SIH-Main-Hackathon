@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from starlette import status
 from starlette.responses import Response
 
-from src.auth.user_auth import verify_user, VerifiedUser
+from src.auth.user_auth import VerifiedUser, verify_user
 from src.client.database import DBClient
 from src.db.user import User
 from src.schema.user import UserCreateRequest
@@ -27,11 +27,13 @@ async def create_user(
     UserService.create_user(request, db_client)
     return Response(status_code=status.HTTP_200_OK)
 
+
 @user_router.get(GET_USER)
 async def get_user(
     verified_user: VerifiedUser = Depends(verify_user),
 ):
     return UserService.get_user(verified_user.requesting_user)
+
 
 @user_router.get(GET_BASE_CATEGORY)
 async def get_base_category(db_client: DBClient = Depends(getDBClient)):

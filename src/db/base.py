@@ -117,13 +117,21 @@ class DBSchemaBase(BaseModel, ABC):
             db.add(po)
 
     @classmethod
-    def _extract_all_data(cls, db: Session, statement) -> List[DBSchemaBase] | None:
+    def _extract_all_data(
+        cls, db: Session, statement, error_not_exist: bool = True
+    ) -> List[DBSchemaBase] | None:
         results = db.execute(statement).scalars().all()
-        return [cls.model_validate(po, from_attributes=True) for po in results]
+        if results:
+            return [cls.model_validate(po, from_attributes=True) for po in results]
+        if error_not_exist:
+            raise Exception(f"Could not find any record.")
+        return None
 
     @classmethod
-    def get_all(cls, db: Session) -> List[DBSchemaBase] | None:
-        return cls._extract_all_data(db, select(cls._schema_cls()))
+    def get_all(
+        cls, db: Session, error_not_exist: bool = True
+    ) -> List[DBSchemaBase] | None:
+        return cls._extract_all_data(db, select(cls._schema_cls()), error_not_exist)
 
     @classmethod
     def get_id(

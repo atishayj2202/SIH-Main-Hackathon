@@ -6,7 +6,12 @@ from starlette.exceptions import HTTPException
 from src.client.database import DBClient
 from src.db.category import Category
 from src.db.user import User
-from src.schema.user import UserCreateRequest, UserResponse, CategoryInfoResponse, SubCategoryResponse
+from src.schema.user import (
+    CategoryInfoResponse,
+    SubCategoryResponse,
+    UserCreateRequest,
+    UserResponse,
+)
 
 
 class UserService:
@@ -33,7 +38,9 @@ class UserService:
         )
 
     @classmethod
-    def get_category(cls,db_client: DBClient, category_id: UUID | None = None) -> CategoryInfoResponse:
+    def get_category(
+        cls, db_client: DBClient, category_id: UUID | None = None
+    ) -> CategoryInfoResponse:
         category = db_client.query(
             Category.get_id,
             id=category_id,
@@ -46,7 +53,7 @@ class UserService:
             description = category.description
             name = category.category_name
             parent_id = category.parent_id
-        sub_categories : list[Category] = db_client.query(
+        sub_categories: list[Category] = db_client.query(
             Category.get_by_field_multiple,
             field="parent_id",
             match_value=category_id,
@@ -71,5 +78,5 @@ class UserService:
                     description=sub_category.description,
                 )
                 for sub_category in sub_categories
-            ]
+            ],
         )
