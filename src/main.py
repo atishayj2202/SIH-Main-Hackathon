@@ -10,7 +10,7 @@ from src.router.message import message_router
 from src.router.user import user_router
 from src.utils.client import getDBClient, getFirebaseClient
 
-app = FastAPI(title="SIH Main PS Backend", version="0.1.1-dev6")
+app = FastAPI(title="SIH Main PS Backend", version="0.1.1-dev7")
 
 origins = os.environ["CORS_ORIGINS"].split(",")
 
