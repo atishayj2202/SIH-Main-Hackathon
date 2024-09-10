@@ -1,4 +1,5 @@
 from src.client.database import DBClient
+from src.client.nyayaAI import gemini_response
 from src.db.message import Message
 from src.db.user import User
 from src.schema.message import MessageRequest, MessageResponse
@@ -35,7 +36,7 @@ class MessageService:
         )
         question.status = "Done"
         answer = Message(
-            message="I am a bot", user_id=user.id, role="AI", status="Done"
+            message=gemini_response(request.question), user_id=user.id, role="AI", status="Done"
         )
         db_client.query(Message.add, items=[question, answer])
         return MessageResponse(
