@@ -32,6 +32,7 @@ class ActiveGameResponse(BaseModel):
     status: str
     current_question_progress: float
     current_question: QuestionResponse
+    points: float
 
 
 class ArchiveGameResponse(BaseModel):

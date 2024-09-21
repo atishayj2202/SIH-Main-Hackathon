@@ -53,6 +53,7 @@ class GameService:
         return ActiveGameResponse(
             game_id=game.id,
             current_position="1",
+            points=game.step_percentage,
             status="active",
             current_question_progress=0,
             current_question=cls.parseQuestion(question),
@@ -63,6 +64,7 @@ class GameService:
         return ActiveGameResponse(
             game_id=game.id,
             current_position=game.current_position,
+            points=game.step_percentage,
             status=game.status,
             current_question_progress=0,
             current_question=cls.getQuestion(game, db_client),
@@ -115,6 +117,7 @@ class GameService:
             status=game.status,
             current_question_progress=0,
             current_question=cls.getQuestion(game, db_client),
+            points=game.step_percentage,
         )
 
     @classmethod
