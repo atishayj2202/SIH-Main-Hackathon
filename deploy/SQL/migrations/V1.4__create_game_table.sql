@@ -6,9 +6,9 @@ CREATE TABLE game (
     game_step        VARCHAR NOT NULL,
     wait_status      VARCHAR NOT NULL,
     status           VARCHAR NOT NULL,
-    current_questions UUID[] DEFAULT '{}' REFERENCES questions (id),
+    current_questions UUID[] DEFAULT '{}',
     step_percentage  FLOAT DEFAULT 0,
-    completed_question UUID[] DEFAULT '{}' REFERENCES user_questions (id),
+    completed_question UUID[] DEFAULT '{}',
     is_deleted       TIMESTAMPTZ DEFAULT NULL,
     completed_at     TIMESTAMPTZ DEFAULT NULL
 );

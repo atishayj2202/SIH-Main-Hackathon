@@ -45,9 +45,10 @@ def verify_game(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
         )
+
     game = cockroach_client.query(
         Game.get_id,
-        game_id=game_id,
+        id=game_id,
         error_not_exist=False,
     )
     if game is None:

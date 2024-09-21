@@ -12,9 +12,10 @@ class Game(DBSchemaBase):
     status: str
     is_deleted: datetime | None = None
     current_questions: list[UUID] = []
-    completed_questions: list[UUID] = []
+    completed_question: list[UUID] = []
     step_percentage: float = 0.0
     completed_at: datetime | None = None
+    current_position: str = "1"
 
     @classmethod
     def _schema_cls(cls) -> Type[Base]:
