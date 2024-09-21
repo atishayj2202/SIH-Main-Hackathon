@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.requests import Request
 
+from src.router.game import game_router
 from src.router.message import message_router
 from src.router.user import user_router
 from src.utils.client import getDBClient, getFirebaseClient
@@ -65,6 +66,7 @@ async def error_middleware(request: Request, call_next):
 app.add_event_handler("startup", startup_event)
 app.include_router(user_router)
 app.include_router(message_router)
+app.include_router(game_router)
 
 
 if __name__ == "__main__":
