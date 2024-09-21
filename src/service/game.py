@@ -1,9 +1,13 @@
 import random
 
+from starlette import status
+from starlette.exceptions import HTTPException
+
 from src.client.database import DBClient
 from src.db.game import Game
 from src.db.question import Question
 from src.db.user import User
+from src.db.user_question import UserQuestion
 from src.schema.game import (
     ActiveGameResponse,
     AnswerRequest,
@@ -131,19 +135,30 @@ class GameService:
             id=request.question_id,
             error_not_exist=False,
         )
-        if question.correct_answer_code == request.selected_option:
-            question = cls.getQuestions(db_client)
-            return AnswerResponse(
-                question_id=request.question_id,
-                answer_id=game.id,
-                status="correct",
-                correct_answer_code=question.correct_option,
-                next_question=cls.parseQuestion(question),
+        if question.id != game.current_questions[0]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid question id",
             )
+        question_new = cls.getQuestions(db_client)
+        game.current_questions = [question_new.id]
+        user_question = UserQuestion(
+            question_id=question.id,
+            user_id=game.user_id,
+            is_correct=question.correct_option == request.selected_option,
+        )
+        game.completed_question.append(user_question.id)
+        db_client.queries(
+            fn=[Game.update_by_id, UserQuestion.add],
+            kwargs=[
+                {"id": game.id, "new_data": game},
+                {"items": [user_question]},
+            ]
+        )
         return AnswerResponse(
             question_id=request.question_id,
             answer_id=game.id,
-            status="incorrect",
+            status="correct" if question.correct_option == request.selected_option else "incorrect",
             correct_answer_code=question.correct_option,
-            next_question=cls.getQuestion(game, db_client),
+            next_question=cls.parseQuestion(question_new),
         )
