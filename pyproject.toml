@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sih-main-hackathon"
-version = "0.1.1-dev13"
+version = "0.1.1-dev14"
 description = ""
 authors = ["ATISHAY JAIN <atishayj.dev@gmail.com>"]
 readme = "README.md"
