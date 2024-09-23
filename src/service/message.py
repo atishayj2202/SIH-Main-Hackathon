@@ -50,8 +50,9 @@ class MessageService:
                         "content": [{"type": "text", "text": message.message}],
                     }
                 )
+        model_rag = Model()
         answer = Message(
-            message=Model.global_model(request.question),
+            message=model_rag.global_model(request.question, messages),
             user_id=user.id,
             role="AI",
             status="Done",
