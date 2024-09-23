@@ -1,6 +1,6 @@
 from openai import OpenAI
 
-from src.client.model.config import OPENAI_API_KEY, SYSTEM_PROMPT
+from src.client.model.config import OPENAI_API_KEY
 
 model = OpenAI(api_key=OPENAI_API_KEY)
 

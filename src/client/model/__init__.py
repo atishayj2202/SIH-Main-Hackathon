@@ -1,5 +1,3 @@
-from http.client import responses
-
 from src.client.model.config import SYSTEM_PROMPT_2
 from src.client.model.global_model import global_model
 from src.client.model.ingest import ingest_documents

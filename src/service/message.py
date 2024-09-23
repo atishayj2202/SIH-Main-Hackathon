@@ -29,7 +29,7 @@ class MessageService:
 
     @classmethod
     def get_ai_reply(
-        cls, request: MessageRequest, user: User, db_client: DBClient
+        cls, request: MessageRequest, user: User, db_client: DBClient, rag: bool =True
     ) -> MessageResponse:
         question = Message(
             message=request.question, user_id=user.id, role="User", status="Pending"
@@ -51,8 +51,18 @@ class MessageService:
                     }
                 )
         model_rag = Model()
+        if rag:
+            temp = model_rag.rag_question(request.question, messages)
+            sources = temp["sources"]
+            ans = temp["answer"]
+        else:
+            ans = model_rag.global_model(
+                request.question,
+                messages,
+            )
+            sources = None
         answer = Message(
-            message=model_rag.global_model(request.question, messages),
+            message=ans,
             user_id=user.id,
             role="AI",
             status="Done",
@@ -63,4 +73,5 @@ class MessageService:
             role=answer.role,
             message_id=answer.id,
             created_at=answer.created_at,
+            sources=sources,
         )

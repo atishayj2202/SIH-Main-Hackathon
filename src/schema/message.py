@@ -9,6 +9,7 @@ class MessageResponse(BaseModel):
     message: str
     role: str
     created_at: datetime
+    sources: list[str] | None = None
 
 
 class MessageRequest(BaseModel):
