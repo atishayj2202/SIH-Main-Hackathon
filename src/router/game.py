@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends
 from starlette import status
 from starlette.responses import Response
 
-from src.auth.user_auth import VerifiedGame, verify_game, verify_user, VerifiedUser
+from src.auth.user_auth import VerifiedGame, VerifiedUser, verify_game, verify_user
 from src.client.database import DBClient
-from src.schema.game import UpdateGameRequest, AnswerRequest
+from src.schema.game import AnswerRequest, UpdateGameRequest
 from src.service.game import GameService
 from src.utils.client import getDBClient
 
@@ -61,12 +61,14 @@ async def update_game(
 ):
     return GameService.updateGame(verified_game.requesting_game, db_client, request)
 
+
 @game_router.get(CURRENT_QUESTION)
 async def current_question(
     verified_game: VerifiedGame = Depends(verify_game),
     db_client: DBClient = Depends(getDBClient),
 ):
     return GameService.getQuestion(verified_game.requesting_game, db_client)
+
 
 @game_router.post(CHECK_ANSWER)
 async def check_answer(

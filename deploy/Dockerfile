@@ -1,4 +1,4 @@
-FROM python:3.11-bullseye
+FROM python:3.12-bullseye
 
 # use root as workdir and set as python path
 WORKDIR /code

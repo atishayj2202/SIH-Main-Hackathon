@@ -156,12 +156,16 @@ class GameService:
             kwargs=[
                 {"id": game.id, "new_data": game},
                 {"items": [user_question]},
-            ]
+            ],
         )
         return AnswerResponse(
             question_id=request.question_id,
             answer_id=game.id,
-            status="correct" if question.correct_option == request.selected_option else "incorrect",
+            status=(
+                "correct"
+                if question.correct_option == request.selected_option
+                else "incorrect"
+            ),
             correct_answer_code=question.correct_option,
             next_question=cls.parseQuestion(question_new),
         )

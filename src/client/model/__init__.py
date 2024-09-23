@@ -1,8 +1,9 @@
 from http.client import responses
 
-from model.ingest import ingest_documents
-from model.qa import ask_question
-from model.global_model import global_model
+from src.client.model.config import SYSTEM_PROMPT_2
+from src.client.model.global_model import global_model
+from src.client.model.ingest import ingest_documents
+from src.client.model.qa import ask_question
 
 
 class Model:
@@ -16,11 +17,20 @@ class Model:
         response = ask_question(question, chat_history)
         return response
 
-    def global_model(self, question, messages) -> str:
+    def global_model(self, question: str, messages: list) -> str:
         if question:
+            messages.insert(
+                0,
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": SYSTEM_PROMPT_2}],
+                },
+            )
             messages.append(
                 {"role": "user", "content": question},
             )
-            model = global_model("gpt-4",messages)
+            model = global_model("gpt-4", messages)
+        else:
+            return "Unexpected error"
         response = model.choices[0].message.content
         return response

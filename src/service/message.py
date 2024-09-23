@@ -1,5 +1,5 @@
 from src.client.database import DBClient
-from src.client.nyayaAI import gemini_response
+from src.client.model import Model
 from src.db.message import Message
 from src.db.user import User
 from src.schema.message import MessageRequest, MessageResponse
@@ -35,8 +35,26 @@ class MessageService:
             message=request.question, user_id=user.id, role="User", status="Pending"
         )
         question.status = "Done"
+        temp = db_client.query(
+            Message.get_by_field_multiple,
+            field="user_id",
+            match_value=user.id,
+            error_not_exist=False,
+        )
+        messages = []
+        if temp is not None:
+            for message in temp:
+                messages.append(
+                    {
+                        "role": "assistant" if message.role == "AI" else "user",
+                        "content": [{"type": "text", "text": message.message}],
+                    }
+                )
         answer = Message(
-            message=gemini_response(request.question), user_id=user.id, role="AI", status="Done"
+            message=Model.global_model(request.question),
+            user_id=user.id,
+            role="AI",
+            status="Done",
         )
         db_client.query(Message.add, items=[question, answer])
         return MessageResponse(
