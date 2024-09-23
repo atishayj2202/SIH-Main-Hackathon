@@ -1,0 +1,8 @@
+langchain
+openai
+faiss-cpu
+tiktoken
+langchain-community
+unstructured
+unstructured[md]
+langchain-openai
