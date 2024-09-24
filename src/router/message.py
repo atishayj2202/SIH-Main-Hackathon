@@ -34,26 +34,35 @@ async def get_ai_reply(
     db_client: DBClient = Depends(getDBClient),
 ):
     return MessageService.get_ai_reply(
-        request=request, user=verified_user.requesting_user, db_client=db_client, rag=False
+        request=request,
+        user=verified_user.requesting_user,
+        db_client=db_client,
+        rag=False,
     )
 
 
 @message_router.get(GET_CATEGORY_MESSAGES, response_model=list[MessageResponse])
 async def get_messages(
+    category_id: UUID,
     verified_user: VerifiedUser = Depends(verify_user),
     db_client: DBClient = Depends(getDBClient),
 ):
     return MessageService.get_all_messages(
-        user=verified_user.requesting_user, db_client=db_client
+        user=verified_user.requesting_user, db_client=db_client, category_id=category_id
     )
 
 
 @message_router.post(GET_CATEGORY_AI_REPLY, response_model=MessageResponse)
 async def get_ai_reply(
+    category_id: UUID,
     request: MessageRequest,
     verified_user: VerifiedUser = Depends(verify_user),
     db_client: DBClient = Depends(getDBClient),
 ):
     return MessageService.get_ai_reply(
-        request=request, user=verified_user.requesting_user, db_client=db_client
+        request=request,
+        user=verified_user.requesting_user,
+        db_client=db_client,
+        rag=True,
+        category_id=category_id,
     )

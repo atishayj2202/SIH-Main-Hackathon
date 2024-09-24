@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from src.client.database import DBClient
 from src.client.model import Model
 from src.db.message import Message
@@ -8,11 +10,13 @@ from src.schema.message import MessageRequest, MessageResponse
 class MessageService:
 
     @classmethod
-    def get_all_messages(cls, user: User, db_client: DBClient) -> list[MessageResponse]:
+    def get_all_messages(
+        cls, user: User, db_client: DBClient, category_id: UUID = None
+    ) -> list[MessageResponse]:
         messages = db_client.query(
-            Message.get_by_field_multiple,
-            field="user_id",
-            match_value=user.id,
+            Message.get_by_multiple_field_multiple,
+            fields=["user_id", "category_id"],
+            match_values=[user.id, category_id],
             error_not_exist=False,
         )
         if messages is None:
@@ -29,16 +33,25 @@ class MessageService:
 
     @classmethod
     def get_ai_reply(
-        cls, request: MessageRequest, user: User, db_client: DBClient, rag: bool =True
+        cls,
+        request: MessageRequest,
+        user: User,
+        db_client: DBClient,
+        rag: bool = True,
+        category_id: UUID = None,
     ) -> MessageResponse:
         question = Message(
-            message=request.question, user_id=user.id, role="User", status="Pending"
+            message=request.question,
+            user_id=user.id,
+            role="User",
+            status="Pending",
+            category_id=category_id,
         )
         question.status = "Done"
         temp = db_client.query(
-            Message.get_by_field_multiple,
-            field="user_id",
-            match_value=user.id,
+            Message.get_by_multiple_field_multiple,
+            fields=["user_id", "category_id"],
+            match_values=[user.id, category_id],
             error_not_exist=False,
         )
         messages = []
@@ -66,6 +79,7 @@ class MessageService:
             user_id=user.id,
             role="AI",
             status="Done",
+            category_id=category_id,
         )
         db_client.query(Message.add, items=[question, answer])
         return MessageResponse(
