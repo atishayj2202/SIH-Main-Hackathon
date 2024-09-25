@@ -1,11 +1,22 @@
 from openai import OpenAI
 
-from src.client.model.config import OPENAI_API_KEY
+from src.client.model.config import OPENAI_API_KEY, SYSTEM_PROMPT_2
 
 model = OpenAI(api_key=OPENAI_API_KEY)
 
 
-def global_model(model_name: str, messages):
+def global_model(messages: list, model_name: str="gpt-4"):
+    system_prompt = {
+                    "role": "system",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": SYSTEM_PROMPT_2
+                        }
+                    ],
+                }
+    if messages[0] != system_prompt:
+        messages.insert(0, system_prompt)
     chat = model.chat.completions.create(
         model=model_name,
         temperature=1,

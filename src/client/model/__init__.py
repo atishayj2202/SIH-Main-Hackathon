@@ -8,7 +8,7 @@ class Model:
     def __init__(self):
         pass
 
-    def ingest_documents(self):
+    def ingest_documents(self) -> None:
         ingest_documents()
 
     def rag_question(self, question, chat_history) -> dict:
@@ -17,17 +17,10 @@ class Model:
 
     def global_model(self, question: str, messages: list) -> str:
         if question:
-            messages.insert(
-                0,
-                {
-                    "role": "system",
-                    "content": [{"type": "text", "text": SYSTEM_PROMPT_2}],
-                },
-            )
             messages.append(
                 {"role": "user", "content": question},
             )
-            model = global_model("gpt-4", messages)
+            model = global_model(messages)
         else:
             return "Unexpected error"
         response = model.choices[0].message.content

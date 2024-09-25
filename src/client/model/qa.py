@@ -1,15 +1,13 @@
 # model/qa.py
 from langchain.chains import RetrievalQA
-from langchain.chains.question_answering.map_reduce_prompt import messages
 from langchain_openai import ChatOpenAI
-
 from src.client.model.config import OPENAI_API_KEY, SYSTEM_PROMPT
 from src.client.model.retriever import get_retriever
+from src.client.model.config import LINKS_HASHMAP
 
-
-def ask_question(query, chat_history):
+def ask_question(query: str, chat_history: list, model_name: str="gpt-4")-> dict:
     llm = ChatOpenAI(
-        model="gpt-4",
+        model=model_name,
         temperature=1,
         top_p=1,
         openai_api_key=OPENAI_API_KEY,
@@ -33,4 +31,13 @@ def ask_question(query, chat_history):
         "answer": result["result"],
         "sources": [doc.metadata["source"] for doc in result["source_documents"]],
     }
+    hashmap = LINKS_HASHMAP
+    final_sources = []
+    for i in response["sources"]:
+        i = "["+i[14:-3]+"]"+"("+hashmap[i]+")"
+        final_sources.append(i)
+
+    response["sources"] = final_sources
     return response
+
+
