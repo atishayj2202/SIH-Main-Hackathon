@@ -48,11 +48,15 @@ class UserService:
         )
         name = ""
         description = ""
+        new_description = ""
+        aka = ""
         parent_id = None
         if category is not None:
             description = category.description
             name = category.category_name
             parent_id = category.parent_id
+            aka = category.remarks
+            new_description = category.article_info
         sub_categories: list[Category] = db_client.query(
             Category.get_by_field_multiple,
             field="parent_id",
@@ -71,6 +75,8 @@ class UserService:
             name=name,
             description=description,
             parent_id=parent_id,
+            aka=aka,
+            new_description=new_description,
             children=[
                 SubCategoryResponse(
                     id=sub_category.id,

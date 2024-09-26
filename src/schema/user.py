@@ -27,4 +27,6 @@ class CategoryInfoResponse(BaseModel):
     name: str | None = None
     description: str | None = None
     parent_id: UUID | None = None
+    aka: str | None = None
+    new_description: str | None = None
     children: list[SubCategoryResponse] = []
