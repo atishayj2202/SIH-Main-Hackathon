@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from src.client.database import DBClient
-from src.client.model import Model
+from src.client.model import RAG_Model, ChatBot
 from src.db.message import Message
 from src.db.user import User
 from src.schema.message import MessageRequest, MessageResponse
@@ -63,13 +63,16 @@ class MessageService:
                         "content": [{"type": "text", "text": message.message}],
                     }
                 )
-        model_rag = Model()
+
+        model_rag = RAG_Model()
+        model_global = ChatBot()
+
         if rag:
-            temp = model_rag.rag_question(request.question, messages)
+            temp = model_rag.prompt(request.question, messages)
             sources = temp["sources"]
             ans = temp["answer"]
         else:
-            ans = model_rag.global_model(
+            ans = model_global.prompt(
                 request.question,
                 messages,
             )

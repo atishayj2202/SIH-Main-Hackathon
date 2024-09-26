@@ -5,7 +5,7 @@ from src.client.model.config import OPENAI_API_KEY, SYSTEM_PROMPT_2
 model = OpenAI(api_key=OPENAI_API_KEY)
 
 
-def global_model(messages: list, model_name: str="gpt-4"):
+def chatbot(messages: list, model_name: str="gpt-4"):
     system_prompt = {
                     "role": "system",
                     "content": [
