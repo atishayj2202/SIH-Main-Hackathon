@@ -1,43 +1,37 @@
 # model/qa.py
-from langchain.chains import RetrievalQA
 from langchain_openai import ChatOpenAI
-from src.client.model.config import OPENAI_API_KEY, SYSTEM_PROMPT
-from src.client.model.retriever import get_retriever
+
 from src.client.model.config import LINKS_HASHMAP
+from src.client.model.config import OPENAI_API_KEY, SYSTEM_PROMPT
 
-def ask_question(query: str, chat_history: list, model_name: str="gpt-4")-> dict:
-    llm = ChatOpenAI(
-        model=model_name,
-        temperature=1,
-        top_p=1,
-        openai_api_key=OPENAI_API_KEY,
-    )
 
-    retriever = get_retriever()
-
-    qa_chain = RetrievalQA.from_chain_type(
-        llm=llm, chain_type="stuff", retriever=retriever, return_source_documents=True
-    )
-
+def query_gen(init_query:str, chat_history: list) -> str:
     messages = (
         "\n".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])
         if chat_history
         else ""
     )
-    full_query = f"{SYSTEM_PROMPT}\n{messages}\nuser: {query}"
+    query = f"{SYSTEM_PROMPT}\n{messages}\nuser: {init_query}"
+    return query
 
-    result = qa_chain.invoke({"query": full_query})
+def response_gen(answer: str, sources: list) -> dict:
+    map = LINKS_HASHMAP
+    linked_sources = []
+    for i in sources:
+        i = "[" + i[14:-3] + "]" + "(" + map[i] + ")"
+        linked_sources.append(i)
     response = {
-        "answer": result["result"],
-        "sources": [doc.metadata["source"] for doc in result["source_documents"]],
+        "answer": answer,
+        "sources": linked_sources
     }
-    hashmap = LINKS_HASHMAP
-    final_sources = []
-    for i in response["sources"]:
-        i = "["+i[14:-3]+"]"+"("+hashmap[i]+")"
-        final_sources.append(i)
-
-    response["sources"] = final_sources
     return response
 
+def llm(model_name: str = "gpt-4"):
+    bot = ChatOpenAI(
+        model=model_name,
+        temperature=1,
+        top_p=1,
+        openai_api_key=OPENAI_API_KEY,
+    )
+    return bot
 
