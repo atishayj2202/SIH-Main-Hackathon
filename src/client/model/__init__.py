@@ -41,7 +41,6 @@ class RAG_Model:
         result = qa_chain.invoke({"query": full_query})
 
         response = response_gen(result)
-        response = response["answer"] + "\n" + "\n".join(response["sources"])
         return response
 
 
