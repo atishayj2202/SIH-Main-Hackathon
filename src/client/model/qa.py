@@ -26,7 +26,10 @@ def response_gen(result: dict) -> dict:
         "answer": answer,
         "sources": linked_sources
     }
-    response["answer"] = response["answer"] + "\n\n" + "Sources: " + response["sources"]
+    response["answer"] = f"""{response["answer"]}
+
+Sources: {response["sources"]}
+"""
     return response
 
 def llm(model_name: str = "gpt-4"):
