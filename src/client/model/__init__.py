@@ -39,7 +39,8 @@ class RAG_Model:
         full_query = query_gen(question, chat_history)
 
         result = qa_chain.invoke({"query": full_query})
-        response = response_gen(result["answer"], result["sources"])
+        sources = [doc.metadata['source'] for doc in result["source_documents"]]
+        response = response_gen(result["result"], sources)
         return response
 
 
