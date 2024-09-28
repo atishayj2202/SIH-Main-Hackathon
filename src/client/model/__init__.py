@@ -40,8 +40,8 @@ class RAG_Model:
 
         result = qa_chain.invoke({"query": full_query})
 
-        sources = [doc.metadata['source'] for doc in result["source_documents"]]
-        response = response_gen(result["result"], sources)
+        response = response_gen(result)
+        response = response["answer"] + "\n" + "\n".join(response["sources"])
         return response
 
 

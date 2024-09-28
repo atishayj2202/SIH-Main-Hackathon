@@ -14,7 +14,9 @@ def query_gen(init_query:str, chat_history: list) -> str:
     query = f"{SYSTEM_PROMPT}\n{messages}\nuser: {init_query}"
     return query
 
-def response_gen(answer: str, sources: list) -> dict:
+def response_gen(result: dict) -> dict:
+    answer = result["result"]
+    sources = [doc.metadata['source'] for doc in result["source_documents"]]
     map = LINKS_HASHMAP
     linked_sources = []
     for i in sources:
