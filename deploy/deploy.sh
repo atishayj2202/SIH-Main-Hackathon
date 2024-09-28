@@ -5,7 +5,7 @@ export PROJECT_NAME=sih
 
 # docker details
 export IMAGE_NAME=sih-main-hackathon
-export IMAGE_VERSION=0.1.1-dev18
+export IMAGE_VERSION=0.1.1-dev19
 export REGISTRY_URL=atishay.azurecr.io
 export FULL_IMAGE_NAME=${REGISTRY_URL}/${PROJECT_NAME}/${IMAGE_NAME}:${IMAGE_VERSION}
 export FLYWAY_CONTAINER_NAME=flyway/flyway:latest
