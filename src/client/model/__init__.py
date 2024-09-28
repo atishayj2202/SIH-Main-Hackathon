@@ -39,7 +39,7 @@ class RAG_Model:
         full_query = query_gen(question, chat_history)
 
         result = qa_chain.invoke({"query": full_query})
-        response = response_gen(result["answer"], result["sources"])
+        response = response_gen(result["result"], result["sources"])
         return response
 
 
